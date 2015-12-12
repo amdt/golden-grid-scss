@@ -3,22 +3,36 @@ $margin: (100% / 18);
 @mixin grid-classes-for-breakpoint-and-columns($breakpoint, $columns) {
     $column-width: ((100% - ($margin * 2)) / $columns);
 
-    // Generate and extend placeholder classes for each column span width.
+    // Generate placeholder class for gutters.
+    %gutters-#{ $breakpoint } {
+        $gutter: 1.5em;
+
+        box-sizing: border-box;
+        padding: {
+            left: ($gutter / 2);
+            right: ($gutter / 2);
+        }
+    }
+
+    // Generate placeholder classes for each column span width.
     @for $i from 1 through $columns {
         %width-#{ $breakpoint }-#{ $i } {
             width: ($column-width * $i);
         }
     }
 
+    // Extend placeholder classes for gutters and each column span width.
     @for $i from 1 through $columns {
         .g-#{ $breakpoint }-#{ $i } {
             @extend %width-#{ $breakpoint }-1;
+            @extend %gutters-#{ $breakpoint };
         }
 
         @if $i < $columns {
             @for $end from ($i + 1) through $columns {
                 .g-#{ $breakpoint }-#{ $i }-#{ $end } {
                     @extend %width-#{ $breakpoint }-#{ ($end - $i + 1) };
+                    @extend %gutters-#{ $breakpoint };
                 }
             }
         }
