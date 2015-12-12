@@ -1,80 +1,84 @@
 $margin: (100% / 18);
-$columns: 4;
-$column-width: ((100% - ($margin * 2)) / $columns);
 
-// Generate and extend placeholder classes for each column span width.
-@for $i from 1 through $columns {
-    %width-#{ $i } {
-        width: ($column-width * $i);
-    }
-}
+@mixin grid-classes-for-breakpoint-and-columns($breakpoint, $columns) {
+    $column-width: ((100% - ($margin * 2)) / $columns);
 
-@for $i from 1 through $columns {
-    .g-s-#{ $i } {
-        @extend %width-1;
+    // Generate and extend placeholder classes for each column span width.
+    @for $i from 1 through $columns {
+        %width-#{ $breakpoint }-#{ $i } {
+            width: ($column-width * $i);
+        }
     }
 
-    @if $i < $columns {
-        @for $end from ($i + 1) through $columns {
-            .g-s-#{ $i }-#{ $end } {
-                @extend %width-#{ ($end - $i + 1) };
+    @for $i from 1 through $columns {
+        .g-#{ $breakpoint }-#{ $i } {
+            @extend %width-#{ $breakpoint }-1;
+        }
+
+        @if $i < $columns {
+            @for $end from ($i + 1) through $columns {
+                .g-#{ $breakpoint }-#{ $i }-#{ $end } {
+                    @extend %width-#{ $breakpoint }-#{ ($end - $i + 1) };
+                }
             }
         }
     }
-}
 
-// Generate and extend placeholder class for columns floated left.
-%float-left {
-    float: left;
-    margin-right: -100%;
-}
-
-@for $i from 1 to $columns {
-    .g-s-#{ $i } {
-        @extend %float-left;
+    // Generate and extend placeholder class for columns floated left.
+    %float-left-#{ $breakpoint } {
+        float: left;
+        margin-right: -100%;
     }
 
-    @for $a from ($i + 1) to $columns {
-        .g-s-#{ $i }-#{ $a } {
-            @extend %float-left;
+    @for $i from 1 to $columns {
+        .g-#{ $breakpoint }-#{ $i } {
+            @extend %float-left-#{ $breakpoint };
+        }
+
+        @for $a from ($i + 1) to $columns {
+            .g-#{ $breakpoint }-#{ $i }-#{ $a } {
+                @extend %float-left-#{ $breakpoint };
+            }
         }
     }
-}
 
-// Generate and extend placeholder class for columns floated right.
-%float-right {
-    float: right;
-    margin-right: $margin;
-}
-
-.g-s-#{ $columns } {
-    @extend %float-right;
-}
-
-@for $i from 2 to $columns {
-    .g-s-#{ $i }-4 {
-        @extend %float-right;
-    }
-}
-
-// Generate and extend placeholder class for columns with left margins.
-@for $i from 1 to $columns {
-    %left-margin-#{ $i } {
-        margin-left: ($margin + ($column-width * ($i - 1)));
+    // Generate and extend placeholder class for columns floated right.
+    %float-right-#{ $breakpoint } {
+        float: right;
+        margin-right: $margin;
     }
 
-    .g-s-#{ $i } {
-        @extend %left-margin-#{ $i };
+    .g-#{ $breakpoint }-#{ $columns } {
+        @extend %float-right-#{ $breakpoint };
     }
 
-    @for $a from ($i + 1) to $columns {
-        .g-s-#{ $i }-#{ $a } {
-            @extend %left-margin-#{ $i };
+    @for $i from 2 to $columns {
+        .g-#{ $breakpoint }-#{ $i }-#{ $columns } {
+            @extend %float-right-#{ $breakpoint };
         }
     }
+
+    // Generate and extend placeholder class for columns with left margins.
+    @for $i from 1 to $columns {
+        %left-margin-#{ $breakpoint }-#{ $i } {
+            margin-left: ($margin + ($column-width * ($i - 1)));
+        }
+
+        .g-#{ $breakpoint }-#{ $i } {
+            @extend %left-margin-#{ $breakpoint }-#{ $i };
+        }
+
+        @for $a from ($i + 1) to $columns {
+            .g-#{ $breakpoint }-#{ $i }-#{ $a } {
+                @extend %left-margin-#{ $breakpoint }-#{ $i };
+            }
+        }
+    }
+
+    .g-#{ $breakpoint }-1-#{ $columns } {
+        @extend %float-left-#{ $breakpoint };
+        @extend %left-margin-#{ $breakpoint }-1;
+    }
 }
 
-.g-s-1-#{ $columns } {
-    @extend %float-left;
-    @extend %left-margin-1;
-}
+@include grid-classes-for-breakpoint-and-columns("s", 4);
