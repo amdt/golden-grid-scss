@@ -1,0 +1,80 @@
+$margin: (100% / 18);
+$columns: 4;
+$column-width: ((100% - ($margin * 2)) / $columns);
+
+// Generate and extend placeholder classes for each column span width.
+@for $i from 1 through $columns {
+    %width-#{ $i } {
+        width: ($column-width * $i);
+    }
+}
+
+@for $i from 1 through $columns {
+    .g-s-#{ $i } {
+        @extend %width-1;
+    }
+
+    @if $i < $columns {
+        @for $end from ($i + 1) through $columns {
+            .g-s-#{ $i }-#{ $end } {
+                @extend %width-#{ ($end - $i + 1) };
+            }
+        }
+    }
+}
+
+// Generate and extend placeholder class for columns floated left.
+%float-left {
+    float: left;
+    margin-right: -100%;
+}
+
+@for $i from 1 to $columns {
+    .g-s-#{ $i } {
+        @extend %float-left;
+    }
+
+    @for $a from ($i + 1) to $columns {
+        .g-s-#{ $i }-#{ $a } {
+            @extend %float-left;
+        }
+    }
+}
+
+// Generate and extend placeholder class for columns floated right.
+%float-right {
+    float: right;
+    margin-right: $margin;
+}
+
+.g-s-#{ $columns } {
+    @extend %float-right;
+}
+
+@for $i from 2 to $columns {
+    .g-s-#{ $i }-4 {
+        @extend %float-right;
+    }
+}
+
+// Generate and extend placeholder class for columns with left margins.
+@for $i from 1 to $columns {
+    %left-margin-#{ $i } {
+        margin-left: ($margin + ($column-width * ($i - 1)));
+    }
+
+    .g-s-#{ $i } {
+        @extend %left-margin-#{ $i };
+    }
+
+    @for $a from ($i + 1) to $columns {
+        .g-s-#{ $i }-#{ $a } {
+            @extend %left-margin-#{ $i };
+        }
+    }
+}
+
+.g-s-1-#{ $columns } {
+    @extend %float-left;
+    @extend %left-margin-1;
+}
