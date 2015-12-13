@@ -97,10 +97,10 @@ $margin: (100% / 18);
 
 @include grid-classes-for-breakpoint-and-columns("s", 4);
 
-@media (min-width: 720px) {
+@media (min-width: 45rem) {
     @include grid-classes-for-breakpoint-and-columns("m", 8);
 }
 
-@media (min-width: 1872px) {
+@media (min-width: 117rem) {
     @include grid-classes-for-breakpoint-and-columns("l", 16);
 }
