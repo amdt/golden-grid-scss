@@ -3,11 +3,12 @@ $margin: (100% / 18);
 @mixin grid-classes-for-breakpoint-and-columns($breakpoint, $columns) {
     $column-width: ((100% - ($margin * 2)) / $columns);
 
-    // Generate placeholder class for gutters.
-    %gutters-#{ $breakpoint } {
+    // Generate placeholder class for gutters and clearing reset.
+    %gutters-floats-#{ $breakpoint } {
         $gutter: 1.5em;
 
         box-sizing: border-box;
+        clear: none;
         padding: {
             left: ($gutter / 2);
             right: ($gutter / 2);
@@ -25,14 +26,14 @@ $margin: (100% / 18);
     @for $i from 1 through $columns {
         .g-#{ $breakpoint }-#{ $i } {
             @extend %width-#{ $breakpoint }-1;
-            @extend %gutters-#{ $breakpoint };
+            @extend %gutters-floats-#{ $breakpoint };
         }
 
         @if $i < $columns {
             @for $end from ($i + 1) through $columns {
                 .g-#{ $breakpoint }-#{ $i }-#{ $end } {
                     @extend %width-#{ $breakpoint }-#{ ($end - $i + 1) };
-                    @extend %gutters-#{ $breakpoint };
+                    @extend %gutters-floats-#{ $breakpoint };
                 }
             }
         }
@@ -92,6 +93,13 @@ $margin: (100% / 18);
     .g-#{ $breakpoint }-1-#{ $columns } {
         @extend %float-left-#{ $breakpoint };
         @extend %left-margin-#{ $breakpoint }-1;
+    }
+
+    // Clear full-width columns, and provide class for clearing
+    // within breakpoint.
+    .g-#{ $breakpoint }-1-#{ $columns },
+    .g-#{ $breakpoint }-clear {
+        clear: both;
     }
 }
 
